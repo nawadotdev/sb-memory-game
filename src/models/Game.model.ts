@@ -18,6 +18,7 @@ export interface GameAction {
     action: GameActionType;
     timestamp: number;
     cardIndex?: number;
+    matchedCardIndex?: number[];
 }
 
 export interface IGame {
@@ -35,6 +36,7 @@ const gameActionSchema = new Schema<GameAction>({
     action: { type: String, enum: Object.values(GameActionType), required: true },
     timestamp: { type: Number, required: true },
     cardIndex: { type: Number, required: false },
+    matchedCardIndex: { type: [Number], required: false },
 }, { id: false, _id: false });
 
 const gameSchema = new Schema<IGame>({

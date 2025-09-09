@@ -74,7 +74,7 @@ export class GameService {
                     game.actions.push({
                         action: GameActionType.MATCH,
                         timestamp: Date.now(),
-                        cardIndex,
+                        matchedCardIndex: [first.cardIndex!, second.cardIndex!]
                     });
                     game.score += 1;
                 }
