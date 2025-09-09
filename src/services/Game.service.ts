@@ -30,27 +30,32 @@ export class GameService {
         return game;
     }
 
-    static async getGame(gameId: Types.ObjectId): Promise<IGame | null> {
+    static async getGame(gameId: Types.ObjectId, userId: Types.ObjectId): Promise<IGame | null> {
         const redis = await getRedisClient();
         const data = await redis.get(this.getRedisKey(gameId));
-        if (data) return JSON.parse(data) as IGame;
+        if (data) {
+            const game = JSON.parse(data) as IGame;
+            if (game.userId.toString() !== userId.toString()) throw new Error("Game not found");
+            return game;
+        }
 
         await dbConnect();
         const game = await GameDB.findById(gameId);
+        if (game?.userId.toString() !== userId.toString()) throw new Error("Game not found");
         return game as IGame;
     }
 
-    static async flipCard(gameId: Types.ObjectId, cardIndex: number, userId: string) {
+    static async flipCard(gameId: Types.ObjectId, cardIndex: number, userId: Types.ObjectId) {
         const redis = await getRedisClient();
 
         const lockKey = `lock:game:${gameId}`;
-        const acquired = await redis.set(lockKey, userId, { NX: true, EX: 2 });
+        const acquired = await redis.set(lockKey, userId.toString(), { NX: true, EX: 2 });
         if (!acquired) {
             throw new Error("Another flip in progress, try again.");
         }
 
         try {
-            const game = await this.getGame(gameId);
+            const game = await this.getGame(gameId, userId);
             if (!game) throw new Error("Game not found");
 
             game.actions.push({
@@ -82,9 +87,9 @@ export class GameService {
         }
     }
 
-    static async endGame(gameId: Types.ObjectId) {
+    static async endGame(gameId: Types.ObjectId, userId: Types.ObjectId) {
         const redis = await getRedisClient();
-        const game = await this.getGame(gameId);
+        const game = await this.getGame(gameId, userId);
         if (!game) return null;
 
         game.status = GameStatus.ENDED;
