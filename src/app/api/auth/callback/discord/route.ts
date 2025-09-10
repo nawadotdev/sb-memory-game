@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
     }
     try {
         const decodedState = verifyCookie(clientState.value)
-        console.log(decodedState, state)
         if (decodedState !== state) {
             return NextResponse.json({ error: 'State mismatch' }, { status: 401 })
         }
