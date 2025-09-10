@@ -16,7 +16,7 @@ const DiscordButton = () => {
         user ? (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button className='cursor-pointer bg-discord-blue hover:bg-discord-blue/80'>
+                    <Button className='cursor-pointer bg-discord-blue hover:bg-discord-blue/80 md:text-base text-sm'>
                         <Image src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.discordId}/${user.avatar}` : '/discord.png'} alt='Discord Avatar' width={20} height={20} className='rounded-full' onError={(e) => {
                             e.currentTarget.src = '/discord.png'
                         }}/>
@@ -30,7 +30,7 @@ const DiscordButton = () => {
                 </DropdownMenuContent>
             </DropdownMenu>
         ) : (
-            <Button onClick={login} className='cursor-pointer bg-discord-blue hover:bg-discord-blue/80'>
+            <Button onClick={login} className='cursor-pointer bg-discord-blue hover:bg-discord-blue/80 md:text-base text-sm'>
                 <Image src='/discord.png' alt='Discord Logo' width={20} height={20} className='rounded-full' />
                 Login with Discord
             </Button>
