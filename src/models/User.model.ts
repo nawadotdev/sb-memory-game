@@ -21,6 +21,4 @@ const userSchema = new Schema<IUser>({
     timestamps: true,
 });
 
-userSchema.index({ discordId: 1 }, { unique: true });
-
 export const UserDB = models?.User || model<IUser>('User', userSchema);
