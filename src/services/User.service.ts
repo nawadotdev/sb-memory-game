@@ -26,4 +26,9 @@ export class UserService {
       { new: true }
     );
   }
+
+  static async getUser(userId: Types.ObjectId): Promise<IUser | null> {
+    await dbConnect();
+    return UserDB.findById(userId);
+  }
 }
