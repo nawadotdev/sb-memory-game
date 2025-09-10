@@ -3,16 +3,9 @@ import { UserDB, IUser } from "@/models/User.model"
 import { Types } from "mongoose";
 
 export class UserService {
-  static async findOrCreate(discordId: string, discordUsername: string): Promise<IUser> {
+  static async findOrCreate(discordId: string, discordUsername: string, avatar?: string): Promise<IUser> {
     await dbConnect();
-    let user = await UserDB.findOne({ discordId });
-    if (!user) {
-      user = await UserDB.create({
-        discordId,
-        discordUsername,
-        usedRights: 0,
-      });
-    }
+    const user = await UserDB.findOneAndUpdate({ discordId }, { discordUsername, avatar: avatar ?? undefined }, { new: true, upsert: true });
     return user;
   }
 

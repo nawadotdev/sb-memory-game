@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
         let user: IUser
         try {
-            user = await UserService.findOrCreate(discordId, me.user.username)
+            user = await UserService.findOrCreate(discordId, me.user.username, me.user.avatar ?? undefined)
         } catch {
             return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
         }
