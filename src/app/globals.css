@@ -41,10 +41,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --color-solbabe-purple: var(--solbabe-purple);
+  --color-discord-blue: var(--discord-blue);
 }
 
 :root {
   --radius: 0.625rem;
+  --solbabe-purple: #0e0b20;
+  --discord-blue: #5865F2;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
