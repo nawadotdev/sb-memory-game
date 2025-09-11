@@ -63,7 +63,6 @@ export class GameService {
       const flipped = game.deck.filter(c => c.status === CardStatus.FLIPPED);
       if (flipped.length >= 2) throw new Error("Already 2 cards flipped");
 
-      // --- Flip işlemi
       card.status = CardStatus.FLIPPED;
       const action = {
         action: GameActionType.FLIP,
@@ -72,10 +71,8 @@ export class GameService {
       };
       game.actions.push(action);
 
-      // --- Redis update (fast path)
       await redis.set(this.getRedisKey(game._id), JSON.stringify(game), { EX: 600 });
 
-      // --- Mongo log append (her flip/match için)
       await GameDB.updateOne(
         { _id: gameId },
         { $push: { actions: action } }

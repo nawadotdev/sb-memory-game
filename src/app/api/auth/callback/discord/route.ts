@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
         if (decodedState !== state) {
             return NextResponse.json({ error: 'State mismatch' }, { status: 401 })
         }
-    } catch {
+    } catch (error) {
+        console.error(error)
         return NextResponse.json({ error: 'Invalid client state' }, { status: 401 })
     }
 
@@ -34,7 +35,8 @@ export async function GET(request: NextRequest) {
         let user: IUser
         try {
             user = await UserService.findOrCreate(discordId, me.user.username, me.user.avatar ?? undefined)
-        } catch {
+        } catch (error) {
+            console.error(error)
             return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
         }
 
@@ -48,7 +50,8 @@ export async function GET(request: NextRequest) {
         })
         response.cookies.set("clientState", "", { maxAge: 0, path: "/" })
         return response
-    } catch {
+    } catch (error) {
+        console.error(error)
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
 }
