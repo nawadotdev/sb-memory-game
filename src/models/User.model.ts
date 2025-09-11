@@ -16,7 +16,7 @@ const userSchema = new Schema<IUser>({
     discordId: { type: String, required: true, unique: true },
     discordUsername: { type: String, required: true },
     usedRights: { type: Number, required: true },
-    tweetVerified: { type: String, unique: true, required: false },
+    tweetVerified: { type: String, unique: true, required: false, sparse: true },
     burnedNfts: { type: [String], required: true, default: [] },
     avatar: { type: String, required: false },
 }, {
