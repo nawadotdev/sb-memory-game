@@ -7,6 +7,7 @@ export interface IUser {
     usedRights: number;
     tweetVerified?: string
     avatar?: string
+    burnedNfts: string[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -16,6 +17,7 @@ const userSchema = new Schema<IUser>({
     discordUsername: { type: String, required: true },
     usedRights: { type: Number, required: true },
     tweetVerified: { type: String, unique: true },
+    burnedNfts: { type: [String], required: true, default: [] },
     avatar: { type: String, required: false },
 }, {
     timestamps: true,
