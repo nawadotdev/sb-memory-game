@@ -8,7 +8,7 @@ export class GameService {
         return `game:${gameId}`;
     }
 
-    static async createGame(userId: Types.ObjectId, deck: string[]) {
+    static async createGame(userId: Types.ObjectId, deck: number[]) {
         await dbConnect();
         const game = await GameDB.create({
             userId,

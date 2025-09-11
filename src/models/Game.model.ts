@@ -42,7 +42,7 @@ const gameActionSchema = new Schema<GameAction>({
 const gameSchema = new Schema<IGame>({
     actions: { type: [gameActionSchema], required: true, default: [] },
     status: { type: String, enum: Object.values(GameStatus), required: true },
-    deck: { type: [String], required: true },
+    deck: { type: [Number], required: true },
     score: { type: Number, required: true, default: 0 },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
