@@ -63,19 +63,37 @@ export class GameService {
       const flipped = game.deck.filter(c => c.status === CardStatus.FLIPPED);
       if (flipped.length >= 2) throw new Error("Already 2 cards flipped");
 
+      // --- Flip işlemi
       card.status = CardStatus.FLIPPED;
-      game.actions.push({
+      const action = {
         action: GameActionType.FLIP,
         timestamp: Date.now(),
         cardIndex,
-      });
+      };
+      game.actions.push(action);
 
+      // --- Redis update (fast path)
       await redis.set(this.getRedisKey(game._id), JSON.stringify(game), { EX: 600 });
+
+      // --- Mongo log append (her flip/match için)
+      await GameDB.updateOne(
+        { _id: gameId },
+        { $push: { actions: action } }
+      );
+
+      if (game.actions.length % 5 === 0) {
+        await GameDB.updateOne(
+          { _id: gameId },
+          { $set: { deck: game.deck, status: game.status } }
+        );
+      }
+
       return game;
     } finally {
       await redis.del(lockKey);
     }
   }
+
 
 
   static async matchCards(gameId: Types.ObjectId, userId: Types.ObjectId) {
@@ -100,6 +118,10 @@ export class GameService {
     } else {
       first.status = CardStatus.HIDDEN;
       second.status = CardStatus.HIDDEN;
+    }
+
+    if (game.deck.every(c => c.status === CardStatus.FOUND)) {
+      game.status = GameStatus.COMPLETED;
     }
 
     await redis.set(this.getRedisKey(game._id), JSON.stringify(game), { EX: 600 });
