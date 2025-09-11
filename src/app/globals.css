@@ -125,3 +125,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* yükseklik bazlı kare */
+.square-by-height {
+  aspect-ratio: 1 / 1;
+  height: 100%;
+  width: auto;
+}
