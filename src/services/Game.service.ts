@@ -46,6 +46,7 @@ export class GameService {
   }
 
   static async flipCard(gameId: Types.ObjectId, cardIndex: number, userId: Types.ObjectId) {
+    await dbConnect();
     const redis = await getRedisClient();
     const lockKey = `lock:game:${gameId}`;
     const acquired = await redis.set(lockKey, userId.toString(), { NX: true, EX: 2 });
@@ -73,17 +74,17 @@ export class GameService {
 
       await redis.set(this.getRedisKey(game._id), JSON.stringify(game), { EX: 600 });
 
-      await GameDB.updateOne(
-        { _id: gameId },
-        { $push: { actions: action } }
-      );
+      // await GameDB.updateOne(
+      //   { _id: gameId },
+      //   { $push: { actions: action } }
+      // );
 
-      if (game.actions.length % 5 === 0) {
-        await GameDB.updateOne(
-          { _id: gameId },
-          { $set: { deck: game.deck, status: game.status } }
-        );
-      }
+      // if (game.actions.length % 5 === 0) {
+      //   await GameDB.updateOne(
+      //     { _id: gameId },
+      //     { $set: { deck: game.deck, status: game.status } }
+      //   );
+      // }
 
       return game;
     } finally {
@@ -94,6 +95,7 @@ export class GameService {
 
 
   static async matchCards(gameId: Types.ObjectId, userId: Types.ObjectId) {
+    await dbConnect();
     const redis = await getRedisClient();
     const game = await this.getGame(gameId, userId);
     if (!game) throw new Error("Game not found");
