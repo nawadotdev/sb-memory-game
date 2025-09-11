@@ -28,10 +28,11 @@ const Card = ({
       <Image
         src={src}
         alt="Card"
-        fill   // parent div `relative` olduğu için tüm alanı kaplar
         className="object-cover"
-        sizes="(max-width: 768px) 25vw, (max-width: 1200px) 15vw, 100px"
-        priority={!!card.value} // ilk açılışta kritik olanlar hızlı yüklensin
+        width={2000}
+        height={2000}
+        priority={!!card.value}
+        unoptimized={true}
       />
 
       {loading && (
