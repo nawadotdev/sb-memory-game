@@ -1,5 +1,6 @@
 import { generateDeck } from "@/lib/game";
 import { jwtAuth } from "@/lib/jwt";
+import { toSafeGame } from "@/models/Game.model";
 import { GameService } from "@/services/Game.service";
 import { UserService } from "@/services/User.service";
 import { Types } from "mongoose";
@@ -20,6 +21,6 @@ export async function GET(request: NextRequest) {
 
     const game = await GameService.createGame(new Types.ObjectId(userId), deck)
 
-    return NextResponse.json(game)
+    return NextResponse.json(toSafeGame(game))
     
 }

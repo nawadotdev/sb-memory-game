@@ -1,5 +1,5 @@
 import { jwtAuth } from "@/lib/jwt";
-import { GameActionType } from "@/models/Game.model";
+import { toSafeGame } from "@/models/Game.model";
 import { GameService } from "@/services/Game.service";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,13 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!game) {
         return NextResponse.json({ error: "Game not found" }, { status: 404 })
     }
-    const safeGame = {
-        _id: game._id.toString(),
-        status: game.status,
-        deckSize: game.deck.length,
-        score: game.score,
-        matchedCards: game.actions.filter(a => a.action === GameActionType.MATCH).map(a => a.matchedCardIndex),
-    }
 
-    return NextResponse.json(safeGame)
+
+    return NextResponse.json(toSafeGame(game))
 }
