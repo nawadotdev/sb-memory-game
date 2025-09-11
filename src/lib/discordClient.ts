@@ -11,7 +11,7 @@ export const getDiscordClient = () => {
         throw new Error("DISCORD_TOKEN is not set");
     }
     if (!discordClient.isReady()) {
-        discordClient.login(process.env.DISCORD_TOKEN);
+        discordClient.login(DISCORD_TOKEN);
     }
     return discordClient;
 }

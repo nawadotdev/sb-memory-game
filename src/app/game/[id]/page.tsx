@@ -31,14 +31,13 @@ const GamePage = () => {
   useEffect(() => {
     fetchGame()
     return () => {
-      // cleanup timer
       if (matchTimeout.current) clearTimeout(matchTimeout.current)
     }
   }, [id])
 
   const handleMatch = async () => {
     if (matchTimeout.current) {
-      clearTimeout(matchTimeout.current) // iptal et
+      clearTimeout(matchTimeout.current)
       matchTimeout.current = null
     }
     try {
@@ -64,7 +63,6 @@ const GamePage = () => {
 
     const flipped = game.cards.filter((c) => c.status === "flipped")
 
-    // 🔥 3. flip gelirse → önce match tetikle
     if (flipped.length === 2) {
       await handleMatch()
     }
@@ -84,7 +82,6 @@ const GamePage = () => {
 
       const flippedNow = updated.cards.filter((c) => c.status === "flipped")
       if (flippedNow.length === 2) {
-        // ⏱️ 1 saniye bekle, match planla
         matchTimeout.current = setTimeout(() => {
           handleMatch()
         }, 1000)
@@ -93,7 +90,6 @@ const GamePage = () => {
     } catch {
       toast.error("Flip failed")
     } finally {
-      // sadece 1 kart açıldıysa → hemen unlock
       setIsProcessingFlip(false)
       setFlippingIndex(undefined)
     }

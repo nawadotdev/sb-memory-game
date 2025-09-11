@@ -24,15 +24,18 @@ export function signUserId(userId: string) {
     return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
 }
 
-export function jwtAuth(request: NextRequest): string {
+export function jwtAuth(request: NextRequest): string | null {
     const userToken = request.cookies.get("userToken")
     if (!userToken) {
-        throw new Error("Unauthorized")
+        return null
     }
     try {
         const jwtPayload = verifyCookie(userToken.value) as { userId: string }
+        if (!jwtPayload.userId) {
+            return null
+        }
         return jwtPayload.userId
     } catch {
-        throw new Error("Unauthorized")
+        return null
     }
 }

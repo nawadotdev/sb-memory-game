@@ -15,6 +15,9 @@ export async function GET(request: NextRequest) {
     }
 
     const user = await UserService.getUser(new Types.ObjectId(userId.userId))
+    if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 })
+    }
     return NextResponse.json(user)
 
 }

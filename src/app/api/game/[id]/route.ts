@@ -9,7 +9,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-
     const { id } = await params;
     const game = await GameService.getGame(new Types.ObjectId(id), new Types.ObjectId(userId))
     if (!game) {
