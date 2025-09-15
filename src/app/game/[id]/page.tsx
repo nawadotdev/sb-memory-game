@@ -21,7 +21,7 @@ const GamePage = () => {
   useEffect(() => {
     if (!token) return
 
-    socket = new WebSocket(`ws://localhost:8080?token=${token}`)
+    socket = new WebSocket(`https://sb-memory-game-server.onrender.com?token=${token}`)
 
     socket.onopen = () => {
       console.log("connected")
