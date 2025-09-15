@@ -43,7 +43,7 @@ const Footer = () => {
                             label="SolBabes X"
                             className="cursor-pointer"
                         />
-                        <span className="text-xs">X</span>
+                        <span className="text-xs">/solana_babes</span>
                     </Link>
 
                     <Link
@@ -58,7 +58,7 @@ const Footer = () => {
                             label="SolBabes Discord"
                             className="cursor-pointer"
                         />
-                        <span className="text-xs">Discord</span>
+                        <span className="text-xs">/bjbGXn5ShN</span>
                     </Link>
                 </div>
             </div>
