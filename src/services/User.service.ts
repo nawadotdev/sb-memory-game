@@ -3,17 +3,17 @@ import { UserDB, IUser } from "@/models/User.model"
 import { Types } from "mongoose";
 
 export class UserService {
-  static async findOrCreate(discordId: string, discordUsername: string, avatar?: string): Promise<IUser> {
+  static async findOrCreate(discordId: string, discordUsername: string, avatar?: string, userRights: number = 0): Promise<IUser> {
     await dbConnect();
-    const user = await UserDB.findOneAndUpdate({ discordId }, { discordUsername, avatar: avatar ?? undefined }, { new: true, upsert: true });
+    const user = await UserDB.findOneAndUpdate({ discordId }, { discordUsername, avatar: avatar ?? undefined, userRights }, { new: true, upsert: true });
     return user;
   }
 
-  static async incrementUsedRights(userId: Types.ObjectId): Promise<IUser | null> {
+  static async incrementUserRights(userId: Types.ObjectId): Promise<IUser | null> {
     await dbConnect();
     return UserDB.findByIdAndUpdate(
       userId,
-      { $inc: { usedRights: 1 } },
+      { $inc: { userRights: 1 } },
       { new: true }
     );
   }

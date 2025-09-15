@@ -1,8 +1,11 @@
 import { getOAuthToken, getUserData } from "@/lib/discord"
+import { getUserRoles } from "@/lib/discordClient"
 import { signUserId, verifyCookie } from "@/lib/jwt"
-import { IUser } from "@/models/User.model"
+import { getRights, IUser } from "@/models/User.model"
 import { UserService } from "@/services/User.service"
 import { NextRequest, NextResponse } from "next/server"
+
+
 
 export async function GET(request: NextRequest) {
     const clientState = request.cookies.get("clientState")
@@ -32,9 +35,12 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Invalid user data' }, { status: 400 })
         }
 
+        const roles = await getUserRoles(discordId)
+        const userRights = getRights(roles)
+
         let user: IUser
         try {
-            user = await UserService.findOrCreate(discordId, me.user.username, me.user.avatar ?? undefined)
+            user = await UserService.findOrCreate(discordId, me.user.username, me.user.avatar ?? undefined, userRights)
         } catch (error) {
             console.error(error)
             return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
