@@ -2,6 +2,7 @@
 
 import { CardStatus, ISafeGame } from "@/models/Game.model"
 import Card from "./Card"
+import { useEffect, useState } from "react"
 
 const GameComponent = ({
   game,
@@ -15,9 +16,24 @@ const GameComponent = ({
   flippingIndex?: number
 }) => {
 
-  const endTime = game.endTime ? new Date(game.endTime) : null
-  const timeLeftSecond = endTime ? Math.floor((endTime.getTime() - Date.now()) / 1000) : 60
-  const timeLeft = timeLeftSecond > 0 ? timeLeftSecond : 0
+  const [timeLeft, setTimeLeft] = useState<number>(60)
+
+  useEffect(() => {
+    if (!game.endTime) {
+      setTimeLeft(60)
+      return
+    }
+
+    const update = () => {
+      const diff = Math.floor((game.endTime! - Date.now()) / 1000)
+      setTimeLeft(diff > 0 ? diff : 0)
+    }
+
+    update()
+    const interval = setInterval(update, 1000)
+
+    return () => clearInterval(interval)
+  }, [game.endTime])
 
   return (
     <div className="w-full flex flex-col items-center gap-2">
@@ -31,13 +47,13 @@ const GameComponent = ({
       >
         {game.cards.map((card, index) => (
           <div key={index} className="basis-1/4 md:basis-1/5 xl:basis-1/7">
-          <Card
-            card={card}
-            onClick={() => onFlip(index)}
-            disabled={isProcessingFlip}
-            loading={flippingIndex === index}
-            matched={card.status === CardStatus.FOUND}
-          />
+            <Card
+              card={card}
+              onClick={() => onFlip(index)}
+              disabled={isProcessingFlip}
+              loading={flippingIndex === index}
+              matched={card.status === CardStatus.FOUND}
+            />
           </div>
         ))}
       </div>
