@@ -1,33 +1,27 @@
-import { Client, GatewayIntentBits, GuildMember } from "discord.js";
-
 const DISCORD_TOKEN = process.env.DISCORD_BOT_TOKEN
 const GUILD_ID = "1183302319987752971"
 
-const discordClient = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
-});
+export async function getUserRoles(userId: string): Promise<string[]> {
 
-export const getDiscordClient = () => {
-    if (!DISCORD_TOKEN) {
-        throw new Error("DISCORD_TOKEN is not set");
+    if (!DISCORD_TOKEN || !GUILD_ID) {
+        throw new Error("Missing DISCORD_BOT_TOKEN or GUILD_ID");
     }
-    if (!discordClient.isReady()) {
-        discordClient.login(DISCORD_TOKEN);
+    
+    const res = await fetch(
+        `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${userId}`,
+        {
+            headers: {
+                Authorization: `Bot ${DISCORD_TOKEN}`,
+            },
+        }
+    );
+
+    if (!res.ok) {
+        console.error("Discord API error", await res.text());
+        return [];
     }
-    return discordClient;
-}
 
-export const getUserRoles = async (userId: string) => {
-    const client = getDiscordClient()
-    const guild = await client.guilds.fetch(GUILD_ID)
-
-    let member: GuildMember
-    try{
-        member = await guild.members.fetch(userId)
-    } catch (error) {
-        console.error(error)
-        return []
-    }   
-
-    return member.roles.cache.map(role => role.id)
+    const member = await res.json();
+    console.log(member)
+    return member.roles as string[];
 }

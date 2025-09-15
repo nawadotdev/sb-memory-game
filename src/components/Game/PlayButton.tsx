@@ -20,13 +20,16 @@ const PlayButton = () => {
                 method: "GET",
                 credentials: "include",
             })
+
+            const game = await response.json()
+
             if (response.ok) {
-                const game = await response.json()
+                
                 console.log(game)
                 router.push(`/game/${game._id}`)
-            } else throw new Error("Failed to create game")
-        } catch {
-            toast.error("Failed to create game")
+            } else throw new Error(game.error || "Failed to create game")
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Failed to create game")
         } finally {
             setCreatingGame(false)
         }
