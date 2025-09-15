@@ -16,9 +16,11 @@ const GameComponent = ({
 }) => {
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <h1 className="text-xl font-bold text-center mb-4">Game {game._id}</h1>
-
+    <div className="w-full flex flex-col items-center gap-2">
+      <div className="flex gap-2">
+        <h2 className="text-2xl font-bold">Score: {game.score}</h2>
+        <h2 className="text-2xl font-bold">Tries: {game.tries}</h2>
+      </div>
       <div
         className="flex flex-wrap gap-2 w-[90%] h-full justify-center"
       >

@@ -8,6 +8,7 @@ import GameComponent from "@/components/Game/GameComponent"
 import { useAuth } from "@/context/AuthContext"
 
 let socket: WebSocket | null = null
+const WS_URL = process.env.NEXT_PUBLIC_SOCKET_URL
 
 const GamePage = () => {
   const { token } = useAuth()
@@ -22,7 +23,7 @@ const GamePage = () => {
   useEffect(() => {
     if (!token) return
 
-    socket = new WebSocket(`ws://localhost:8080?token=${token}`)
+    socket = new WebSocket(`${WS_URL}?token=${token}`)
 
     socket.onopen = () => {
       console.log("connected")

@@ -40,22 +40,22 @@ const Card = ({
             fill
             className="object-cover rounded-md"
             unoptimized
-            hidden={!!card.value}
           />
         </div>
 
         {/* FRONT FACE */}
-        <div className="absolute inset-0 rotate-y-180 rounded-md overflow-hidden">
-          <Image
-            src={`/game/${card.value}.png`}
-            alt="Card front"
-            fill
-            className="object-cover rounded-md"
-            priority={!!card.value}
-            unoptimized
-            hidden={!card.value}
-          />
-        </div>
+        {card.value && (
+                  <div className="absolute inset-0 rotate-y-180 rounded-md overflow-hidden">
+                  <Image
+                    src={`/game/${card.value}.png`}
+                    alt="Card front"
+                    fill
+                    className="object-cover rounded-md"
+                    priority={!!card.value}
+                    unoptimized
+                  />
+                </div>
+        )}
       </div>
 
       {loading && (

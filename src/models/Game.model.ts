@@ -32,6 +32,7 @@ export interface IGame {
     deck: ICard[];
     actions: IGameAction[];
     status: GameStatus;
+    score: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -59,6 +60,7 @@ export const GameSchema = new Schema<IGame>({
     deck: { type: [CardSchema], required: true },
     actions: { type: [GameActionSchema], required: true },
     status: { type: String, enum: GameStatus, required: true },
+    score: { type: Number, required: true, default: 0 },
 }, {
     timestamps: true,
 });
@@ -78,6 +80,8 @@ export interface ISafeGame {
     userId: string;
     cards: ISafeCard[];
     tries: number;
+    status: GameStatus;
+    score: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -93,6 +97,8 @@ export function toSafeGame(game: IGame): ISafeGame {
       _id: game._id.toString(),
       userId: game.userId.toString(),
       cards,
+      status: game.status,
+      score: game.actions.filter((a) => a.action === GameActionType.MATCH).length,
       createdAt: game.createdAt,
       updatedAt: game.updatedAt,
       tries: Math.floor(game.actions.filter((a) => a.action === GameActionType.FLIP).length / 2),
