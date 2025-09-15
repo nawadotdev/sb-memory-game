@@ -15,11 +15,16 @@ const GameComponent = ({
   flippingIndex?: number
 }) => {
 
+  const endTime = game.endTime ? new Date(game.endTime) : null
+  const timeLeftSecond = endTime ? Math.floor((endTime.getTime() - Date.now()) / 1000) : 60
+  const timeLeft = timeLeftSecond > 0 ? timeLeftSecond : 0
+
   return (
     <div className="w-full flex flex-col items-center gap-2">
       <div className="flex gap-2">
         <h2 className="text-2xl font-bold">Score: {game.score}</h2>
         <h2 className="text-2xl font-bold">Tries: {game.tries}</h2>
+        <h2 className="text-2xl font-bold">Time left: {timeLeft.toFixed(0)} seconds</h2>
       </div>
       <div
         className="flex flex-wrap gap-2 w-[90%] h-full justify-center"

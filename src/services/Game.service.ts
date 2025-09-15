@@ -1,6 +1,6 @@
 import { getRedisClient } from "@/lib/redisdb";
 import dbConnect from "@/lib/mongodb";
-import { GameDB, IGame, ICard, CardStatus, GameActionType, GameStatus } from "@/models/Game.model";
+import { GameDB, IGame, ICard, GameActionType, GameStatus } from "@/models/Game.model";
 import { Types } from "mongoose";
 
 export class GameService {
@@ -8,10 +8,10 @@ export class GameService {
     return `game:${gameId}`;
   }
 
-  static async createGame(userId: Types.ObjectId, deck: ICard[]) {
+  static async createGame(userId: Types.ObjectId, deck: ICard[]): Promise<string> {
     await dbConnect();
 
-    const game = await GameDB.create({
+    const game = new GameDB({
       userId,
       deck,
       actions: [
@@ -20,14 +20,9 @@ export class GameService {
       status: GameStatus.IN_PROGRESS,
     });
 
-    const redis = await getRedisClient();
-    await redis.set(
-      this.getRedisKey(game._id),
-      JSON.stringify(game),
-      { EX: 600 }
-    );
+    await game.save();
 
-    return game.toObject();
+    return game._id.toString();
   }
 
   static async getGame(gameId: Types.ObjectId, userId: Types.ObjectId): Promise<IGame | null> {

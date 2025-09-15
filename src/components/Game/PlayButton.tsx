@@ -26,7 +26,7 @@ const PlayButton = () => {
             if (response.ok) {
                 
                 console.log(game)
-                router.push(`/game/${game._id}`)
+                router.push(`/game/${game}`)
             } else throw new Error(game.error || "Failed to create game")
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Failed to create game")

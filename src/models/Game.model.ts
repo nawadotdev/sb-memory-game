@@ -84,23 +84,5 @@ export interface ISafeGame {
     score: number;
     createdAt: Date;
     updatedAt: Date;
+    endTime: number | null;
 }
-
-export function toSafeGame(game: IGame): ISafeGame {
-    const cards: ISafeCard[] = game.deck.map((c) => ({
-      index: c.index,
-      status: c.status,
-      value: c.status === CardStatus.FOUND || c.status === CardStatus.FLIPPED ? c.value : undefined,
-    }));
-  
-    return {
-      _id: game._id.toString(),
-      userId: game.userId.toString(),
-      cards,
-      status: game.status,
-      score: game.actions.filter((a) => a.action === GameActionType.MATCH).length,
-      createdAt: game.createdAt,
-      updatedAt: game.updatedAt,
-      tries: Math.floor(game.actions.filter((a) => a.action === GameActionType.FLIP).length / 2),
-    };
-  }
