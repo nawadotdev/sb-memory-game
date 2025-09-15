@@ -2,97 +2,64 @@
 
 import { ISafeGame } from "@/models/Game.model"
 import { useParams } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "react-hot-toast"
 import GameComponent from "@/components/Game/GameComponent"
+import { useAuth } from "@/context/AuthContext"
+
+let socket: WebSocket | null = null
 
 const GamePage = () => {
+  const { token } = useAuth()
   const params = useParams<{ id: string }>()
   const id = params.id
   const [game, setGame] = useState<ISafeGame | undefined>(undefined)
   const [loading, setLoading] = useState(true)
   const [isProcessingFlip, setIsProcessingFlip] = useState(false)
   const [flippingIndex, setFlippingIndex] = useState<number | undefined>()
-  const matchTimeout = useRef<NodeJS.Timeout | null>(null)
-
-  const fetchGame = async () => {
-    try {
-      const resp = await fetch(`/api/game/${id}`, { credentials: "include" })
-      if (resp.ok) {
-        setGame(await resp.json())
-      } else throw new Error("Failed to fetch game")
-    } catch {
-      toast.error("Failed to fetch game")
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
-    fetchGame()
-    return () => {
-      if (matchTimeout.current) clearTimeout(matchTimeout.current)
-    }
-  }, [id])
+    if (!token) return
 
-  const handleMatch = async () => {
-    if (matchTimeout.current) {
-      clearTimeout(matchTimeout.current)
-      matchTimeout.current = null
+    socket = new WebSocket(`ws://localhost:8080?token=${token}`)
+
+    socket.onopen = () => {
+      console.log("connected")
+      socket?.send(JSON.stringify({ type: "join", payload: { gameId: id } }))
     }
-    try {
-      const matchResp = await fetch(`/api/game/${id}/match`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      })
-      if (matchResp.ok) {
-        const matched = (await matchResp.json()) as ISafeGame
-        setGame(matched)
+
+    socket.onmessage = (event) => {
+      try {
+        const { type, payload } = JSON.parse(event.data)
+
+        if (type === "state") {
+          setGame(payload as ISafeGame)
+          setLoading(false)
+        }
+
+        if (type === "error_message") {
+          toast.error(payload)
+        }
+      } catch (err) {
+        console.error("Invalid message:", event.data)
       }
-    } catch {
-      toast.error("Match failed")
-    } finally {
-      setIsProcessingFlip(false)
-      setFlippingIndex(undefined)
     }
-  }
 
-  const handleFlip = async (cardIndex: number) => {
-    if (!game || isProcessingFlip) return
-
-    const flipped = game.cards.filter((c) => c.status === "flipped")
-
-    if (flipped.length === 2) {
-      await handleMatch()
+    return () => {
+      socket?.close()
     }
+  }, [id, token])
+
+  const handleFlip = (cardIndex: number) => {
+    if (!game || isProcessingFlip || !socket) return
 
     setIsProcessingFlip(true)
     setFlippingIndex(cardIndex)
-    try {
-      const resp = await fetch(`/api/game/${id}/flip`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ cardIndex }),
-      })
-      if (!resp.ok) throw new Error("Flip failed")
-      const updated = (await resp.json()) as ISafeGame
-      setGame(updated)
 
-      const flippedNow = updated.cards.filter((c) => c.status === "flipped")
-      if (flippedNow.length === 2) {
-        matchTimeout.current = setTimeout(() => {
-          handleMatch()
-        }, 1000)
-        return
-      }
-    } catch {
-      toast.error("Flip failed")
-    } finally {
-      setIsProcessingFlip(false)
-      setFlippingIndex(undefined)
-    }
+    socket.send(JSON.stringify({ type: "flip", payload: { gameId: id, cardIndex } }))
+
+    setIsProcessingFlip(false)
+    setFlippingIndex(undefined)
   }
 
   return (
