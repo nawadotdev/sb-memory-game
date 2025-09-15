@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "@/lib/utils"
 import { ISafeCard } from "@/models/Game.model"
 import { Loader2 } from "lucide-react"
 import Image from "next/image"
@@ -15,28 +16,50 @@ const Card = ({
   disabled: boolean
   loading: boolean
 }) => {
-  const src = card.value
-    ? `/game/${card.value}.png`
-    : `/game/unfound.png`
+  const isFlipped = card.status !== "hidden"
 
   return (
     <div
       onClick={!disabled ? onClick : undefined}
-      className={`relative rounded-md aspect-square overflow-hidden
-        ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+      className={cn(
+        "relative aspect-square perspective",
+        disabled ? "cursor-not-allowed" : "cursor-pointer"
+      )}
     >
-      <Image
-        src={src}
-        alt="Card"
-        className="object-cover"
-        width={2000}
-        height={2000}
-        priority={!!card.value}
-        unoptimized={true}
-      />
+      <div
+        className={cn(
+          "relative w-full h-full transition-transform duration-500 preserve-3d",
+          isFlipped && "rotate-y-180"
+        )}
+      >
+        {/* BACK FACE */}
+        <div className="absolute inset-0 rounded-md overflow-hidden">
+          <Image
+            src="/game/unfound.png"
+            alt="Card back"
+            fill
+            className="object-cover rounded-md"
+            unoptimized
+            hidden={!!card.value}
+          />
+        </div>
+
+        {/* FRONT FACE */}
+        <div className="absolute inset-0 rotate-y-180 rounded-md overflow-hidden">
+          <Image
+            src={`/game/${card.value}.png`}
+            alt="Card front"
+            fill
+            className="object-cover rounded-md"
+            priority={!!card.value}
+            unoptimized
+            hidden={!card.value}
+          />
+        </div>
+      </div>
 
       {loading && (
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-md">
           <Loader2 className="animate-spin text-white w-6 h-6" />
         </div>
       )}

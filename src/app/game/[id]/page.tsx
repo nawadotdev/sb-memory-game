@@ -13,6 +13,7 @@ const GamePage = () => {
   const { token } = useAuth()
   const params = useParams<{ id: string }>()
   const id = params.id
+
   const [game, setGame] = useState<ISafeGame | undefined>(undefined)
   const [loading, setLoading] = useState(true)
   const [isProcessingFlip, setIsProcessingFlip] = useState(false)
@@ -21,7 +22,7 @@ const GamePage = () => {
   useEffect(() => {
     if (!token) return
 
-    socket = new WebSocket(`https://sb-memory-game-server.onrender.com?token=${token}`)
+    socket = new WebSocket(`ws://localhost:8080?token=${token}`)
 
     socket.onopen = () => {
       console.log("connected")
@@ -35,13 +36,20 @@ const GamePage = () => {
         if (type === "state") {
           setGame(payload as ISafeGame)
           setLoading(false)
+
+          setIsProcessingFlip(false)
+          setFlippingIndex(undefined)
         }
 
         if (type === "error_message") {
           toast.error(payload)
+          setIsProcessingFlip(false)
+          setFlippingIndex(undefined)
         }
       } catch (err) {
         console.error("Invalid message:", event.data)
+        setIsProcessingFlip(false)
+        setFlippingIndex(undefined)
       }
     }
 
@@ -57,9 +65,6 @@ const GamePage = () => {
     setFlippingIndex(cardIndex)
 
     socket.send(JSON.stringify({ type: "flip", payload: { gameId: id, cardIndex } }))
-
-    setIsProcessingFlip(false)
-    setFlippingIndex(undefined)
   }
 
   return (
