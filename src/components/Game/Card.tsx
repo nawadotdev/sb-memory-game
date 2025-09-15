@@ -10,20 +10,24 @@ const Card = ({
   onClick,
   disabled,
   loading,
+  matched,
 }: {
   card: ISafeCard
   onClick: () => void
   disabled: boolean
   loading: boolean
+  matched: boolean
 }) => {
   const isFlipped = card.status !== "hidden"
 
   return (
     <div
-      onClick={!disabled ? onClick : undefined}
+      onClick={!(disabled || card.value || matched) ? onClick : undefined}
       className={cn(
         "relative aspect-square perspective",
-        disabled ? "cursor-not-allowed" : "cursor-pointer"
+        (disabled || card.value || matched) ? "cursor-not-allowed" : "cursor-pointer",
+        matched ? "opacity-50" : "opacity-100"
+
       )}
     >
       <div

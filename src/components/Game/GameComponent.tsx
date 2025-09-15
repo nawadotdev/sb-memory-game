@@ -1,6 +1,6 @@
 "use client"
 
-import { ISafeGame } from "@/models/Game.model"
+import { CardStatus, ISafeGame } from "@/models/Game.model"
 import Card from "./Card"
 
 const GameComponent = ({
@@ -31,6 +31,7 @@ const GameComponent = ({
             onClick={() => onFlip(index)}
             disabled={isProcessingFlip}
             loading={flippingIndex === index}
+            matched={card.status === CardStatus.FOUND}
           />
           </div>
         ))}
