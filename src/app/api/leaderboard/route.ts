@@ -1,5 +1,5 @@
 import { GameActionType, IGame, Score } from "@/models/Game.model"
-import { IUser } from "@/models/User.model"
+import { IUser, UserDB } from "@/models/User.model"
 import { GameService } from "@/services/Game.service"
 import { NextRequest, NextResponse } from "next/server"
 
