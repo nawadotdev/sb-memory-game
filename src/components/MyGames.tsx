@@ -13,7 +13,7 @@ const MyGames = () => {
         const fetchLeaderboard = async () => {
             const response = await fetch("/api/game", { credentials: "include" })
             const data = await response.json()
-            setList(data.scores)
+            setList(data.scores || [])
         }
         fetchLeaderboard()
     }, [])

@@ -32,7 +32,7 @@ const DiscordButton = () => {
         ) : (
             <Button onClick={login} className='cursor-pointer bg-discord-blue hover:bg-discord-blue/80 md:text-base text-sm'>
                 <Image src='/discord.png' alt='Discord Logo' width={20} height={20} className='rounded-full' />
-                Login with Discord
+                <span className='hidden md:block'>Login with Discord</span>
             </Button>
         )
     )
