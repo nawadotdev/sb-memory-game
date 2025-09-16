@@ -26,7 +26,7 @@ const GamePage = () => {
     socket = new WebSocket(`${WS_URL}?token=${token}`)
 
     socket.onopen = () => {
-      console.log("connected")
+
       socket?.send(JSON.stringify({ type: "join", payload: { gameId: id } }))
     }
 

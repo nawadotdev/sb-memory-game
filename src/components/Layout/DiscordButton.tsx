@@ -20,7 +20,7 @@ const DiscordButton = () => {
                         <Image src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.discordId}/${user.avatar}` : '/discord.png'} alt='Discord Avatar' width={20} height={20} className='rounded-full' onError={(e) => {
                             e.currentTarget.src = '/discord.png'
                         }}/>
-                        {user.discordUsername}
+                        <span className='hidden md:block'>{user.discordUsername}</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>

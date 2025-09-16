@@ -86,3 +86,18 @@ export interface ISafeGame {
     updatedAt: Date;
     endTime: number | null;
 }
+
+export interface Score {
+    username: string;
+    score: number;
+    time?: number;
+    avatar?: string;
+    discordId: string;
+}
+
+export interface MyGame {
+    time?: number;
+    score: number;
+    gameId: string;
+    createdAt: Date;
+}

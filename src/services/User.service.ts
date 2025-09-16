@@ -32,11 +32,11 @@ export class UserService {
     return UserDB.findById(userId);
   }
 
-  static async addBurnedNft(userId: Types.ObjectId, nftId: string): Promise<IUser | null> {
+  static async addBurnedNft(userId: Types.ObjectId, nftId: string[]): Promise<IUser | null> {
     await dbConnect();
     return UserDB.findByIdAndUpdate(
       userId,
-      { $push: { burnedNfts: nftId } },
+      { $addToSet: { burnedNfts: { $each: nftId } } },
       { new: true }
     );
   }

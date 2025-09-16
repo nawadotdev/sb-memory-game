@@ -5,6 +5,9 @@ import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Layout/Navbar";
 import Footer from "@/components/Layout/Footer";
 import { Toaster } from "react-hot-toast";
+import { SolanaWalletProvider } from "@/providers/WalletProvider";
+
+import "@solana/wallet-adapter-react-ui/styles.css"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,7 +72,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <Navbar />
-          {children}
+          <SolanaWalletProvider>
+            {children}
+          </SolanaWalletProvider>
           <Footer />
           <Toaster />
         </AuthProvider>

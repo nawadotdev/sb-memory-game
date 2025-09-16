@@ -39,3 +39,18 @@ export function jwtAuth(request: NextRequest): string | null {
         return null
     }
 }
+
+export function jwtSignMemo(wallet: string, mintIds: string[], userId: string): string {
+    if (!JWT_SECRET) {
+        throw new Error("JWT_SECRET is not set");
+    }
+    return jwt.sign({ wallet, mintIds, userId }, JWT_SECRET, { expiresIn: "1h" });
+}
+
+export function jwtParseMemo(memo: string): { wallet: string, mintIds: string[], userId: string } {
+    if (!JWT_SECRET) {
+        throw new Error("JWT_SECRET is not set");
+    }
+    // verify even expired
+    return jwt.verify(memo, JWT_SECRET, { ignoreExpiration: true }) as { wallet: string, mintIds: string[], userId: string }
+}

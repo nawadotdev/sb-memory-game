@@ -1,12 +1,8 @@
-import { getRedisClient } from "@/lib/redisdb";
 import dbConnect from "@/lib/mongodb";
-import { GameDB, IGame, ICard, GameActionType, GameStatus } from "@/models/Game.model";
+import { GameDB, IGame, ICard, GameStatus } from "@/models/Game.model";
 import { Types } from "mongoose";
 
 export class GameService {
-  static getRedisKey(gameId: Types.ObjectId) {
-    return `game:${gameId}`;
-  }
 
   static async createGame(userId: Types.ObjectId, deck: ICard[]): Promise<string> {
     await dbConnect();
@@ -14,9 +10,7 @@ export class GameService {
     const game = new GameDB({
       userId,
       deck,
-      actions: [
-        { action: GameActionType.START, timestamp: Date.now() }
-      ],
+      actions: [],
       status: GameStatus.IN_PROGRESS,
     });
 
@@ -25,24 +19,18 @@ export class GameService {
     return game._id.toString();
   }
 
-  static async getGame(gameId: Types.ObjectId, userId: Types.ObjectId): Promise<IGame | null> {
-    const redis = await getRedisClient();
-    const data = await redis.get(this.getRedisKey(gameId));
-    if (data) {
-      const game = JSON.parse(data) as IGame;
-      if (game.userId.toString() !== userId.toString()) throw new Error("Game not found");
-      return game;
-    }
-
-    await dbConnect();
-    const game = await GameDB.findById(gameId).lean<IGame>();
-    if (game?.userId.toString() !== userId.toString()) throw new Error("Game not found");
-    return game;
-  }
-
   static async countUserGames(userId: Types.ObjectId): Promise<number> {
     await dbConnect();
     return GameDB.countDocuments({ userId });
   }
 
+  static async getLeaderboard(page: number, limit: number): Promise<IGame[]> {
+    await dbConnect();
+    return GameDB.find().sort({ score: -1 }).skip((page - 1) * limit).populate("userId").limit(limit);
+  }
+
+  static async getUserGames(userId: Types.ObjectId): Promise<IGame[]> {
+    await dbConnect();
+    return GameDB.find({ userId }).sort({ createdAt: -1 });
+  }
 }
