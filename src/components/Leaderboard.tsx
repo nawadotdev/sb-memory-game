@@ -14,7 +14,14 @@ const Leaderboard = () => {
         const fetchLeaderboard = async () => {
             const response = await fetch("/api/leaderboard")
             const data = await response.json()
-            setList(data.scores)
+            const scores = data.scores.filter((score: Score) => score.time && score.time > 0).sort((a: Score, b: Score) => b.score - a.score)
+            const sortedScores = scores.sort((a: Score, b: Score) => {
+                if (a.score === b.score) {
+                    return a.time! - b.time!
+                }
+                return b.score - a.score
+            })
+            setList(sortedScores)
         }
         fetchLeaderboard()
     }, [])
