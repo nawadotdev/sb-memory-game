@@ -4,16 +4,18 @@ import { Score } from "@/models/Game.model"
 import React, { useEffect, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 import { Card, CardTitle } from './ui/card'
+import { useAuth } from "@/context/AuthContext"
 
 const MyGames = () => {
 
     const [list, setList] = useState<(Score & { createdAt: Date, gameId: string })[]>([])
-
+    const { setPlayedGames } = useAuth()
     useEffect(() => {
         const fetchLeaderboard = async () => {
             const response = await fetch("/api/game", { credentials: "include" })
             const data = await response.json()
             setList(data.scores || [])
+            setPlayedGames(data.scores?.length || 0)
         }
         fetchLeaderboard()
     }, [])

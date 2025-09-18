@@ -10,6 +10,8 @@ type AuthContextType = {
     userRights: number | null
     login: () => void
     logout: () => void
+    playedGames: number
+    setPlayedGames: (playedGames: number) => void
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -19,6 +21,8 @@ export const AuthContext = createContext<AuthContextType>({
     userRights: null,
     login: () => {},
     logout: () => {},
+    playedGames: 0,
+    setPlayedGames: () => {},
 })
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -26,6 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticating, setIsAuthenticating] = useState(true)
     const [token, setToken] = useState<string | null>(null)
     const [userRights, setUserRights] = useState<number | null>(null)
+    const [playedGames, setPlayedGames] = useState(0)
     useEffect(() => {
         const fetchUser = async () => {
             try{
@@ -55,7 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         window.location.href = "/api/auth/logout"
     }
 
-    return <AuthContext.Provider value={{ user, isAuthenticating, login, logout, token, userRights }}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value={{ user, isAuthenticating, login, logout, token, userRights, playedGames, setPlayedGames }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {
