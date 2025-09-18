@@ -63,8 +63,19 @@ const GameComponent = ({
           ))}
         </div>
       </div>
-      {isCompleted || timeLeft === 0 && (
-        <Image src="/game/finish.png" alt="Completed" width={400} height={400} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-2xl border-1 border-white" />
+      {(isCompleted || timeLeft === 0) && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="relative">
+            <Image
+              src="/game/finish.png"
+              alt="Completed"
+              width={400}
+              height={400}
+              className="rounded-lg shadow-2xl border border-white"
+            />
+            <div className="glitter-overlay rounded-lg" />
+          </div>
+        </div>
       )}
     </div>
   )
