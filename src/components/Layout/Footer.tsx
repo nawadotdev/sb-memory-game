@@ -18,7 +18,7 @@ const Footer = () => {
                 </div>
 
                 {/* Orta */}
-                <div className="text-center text-xs">
+                <div className="text-center text-xs flex-1 items-center justify-center">
                     Built by{" "}
                     <Link
                         href="https://x.com/nawadotdev"

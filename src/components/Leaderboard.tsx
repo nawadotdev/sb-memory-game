@@ -28,22 +28,22 @@ const Leaderboard = () => {
 
     return (
         <Card className='px-4'>
-            <CardTitle>
+            <CardTitle className='text-center text-2xl'>
                 Leaderboard
             </CardTitle>
-            <Table>
+            <Table className='text-xl'>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>
+                        <TableHead className='text-center'>
                             Rank
                         </TableHead>
-                        <TableHead>
-                            Username
+                        <TableHead className='text-center'>
+                            Discord
                         </TableHead>
-                        <TableHead>
+                        <TableHead className='text-center'>
                             Score
                         </TableHead>
-                        <TableHead>
+                        <TableHead className='text-center'>
                             Time
                         </TableHead>
                     </TableRow>
@@ -52,14 +52,14 @@ const Leaderboard = () => {
                     {list.length > 0 && list.map((item, index) => (
                         <TableRow key={crypto.randomUUID()}>
                             <TableCell>{index + 1}</TableCell>
-                            <TableCell className='flex items-center gap-2'>
+                            <TableCell className='flex items-center gap-2 text-center'>
                                 <Image src={item.avatar ? `https://cdn.discordapp.com/avatars/${item.discordId}/${item.avatar}` : '/discord.png'} alt='Discord Avatar' width={20} height={20} className='rounded-full' onError={(e) => {
                                     e.currentTarget.src = '/discord.png'
                                 }} />
                                 {item.username}
                             </TableCell>
-                            <TableCell>{item.score}</TableCell>
-                            <TableCell>{(item.time?.toFixed(2) || 0)} seconds</TableCell>
+                            <TableCell className='text-center'>{item.score}</TableCell>
+                            <TableCell className='text-center'>{(item.time?.toFixed(2) || 0)}s</TableCell>
                         </TableRow>
                     ))}
                     {list.length === 0 && (

@@ -33,6 +33,7 @@ export interface IGame {
     actions: IGameAction[];
     status: GameStatus;
     score: number;
+    attempt: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -61,6 +62,7 @@ export const GameSchema = new Schema<IGame>({
     actions: { type: [GameActionSchema], required: true },
     status: { type: String, enum: GameStatus, required: true },
     score: { type: Number, required: true, default: 0 },
+    attempt: { type: Number, required: true, default: 0 },
 }, {
     timestamps: true,
 });
@@ -79,7 +81,7 @@ export interface ISafeGame {
     _id: string;
     userId: string;
     cards: ISafeCard[];
-    tries: number;
+    attempt: number;
     status: GameStatus;
     score: number;
     createdAt: Date;

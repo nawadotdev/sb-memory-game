@@ -7,6 +7,7 @@ type AuthContextType = {
     user: IUser | null
     isAuthenticating: boolean
     token: string | null
+    userRights: number | null
     login: () => void
     logout: () => void
 }
@@ -15,6 +16,7 @@ export const AuthContext = createContext<AuthContextType>({
     user: null,
     isAuthenticating: true,
     token: null,
+    userRights: null,
     login: () => {},
     logout: () => {},
 })
@@ -23,15 +25,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<IUser | null>(null)
     const [isAuthenticating, setIsAuthenticating] = useState(true)
     const [token, setToken] = useState<string | null>(null)
+    const [userRights, setUserRights] = useState<number | null>(null)
     useEffect(() => {
         const fetchUser = async () => {
             try{
                 const response = await fetch("/api/auth/me")
                 if(response.ok){
-                    const { user, token } = await response.json()
+                    const { user, token, userRights } = await response.json()
                     setUser(user)
                     setToken(token)
-                    setUser(user)
+                    setUserRights(userRights)
                 } else {
                     setUser(null)
                 }
@@ -52,7 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         window.location.href = "/api/auth/logout"
     }
 
-    return <AuthContext.Provider value={{ user, isAuthenticating, login, logout, token }}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value={{ user, isAuthenticating, login, logout, token, userRights }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {

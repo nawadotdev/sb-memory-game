@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     const deck = generateDeck()
 
-    const gameId = await GameService.createGame(new Types.ObjectId(userId), deck)
+    const gameId = await GameService.createGame(new Types.ObjectId(userId), deck, userGames + 1)
 
     return NextResponse.json(gameId)
     

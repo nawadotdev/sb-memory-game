@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 
 export class GameService {
 
-  static async createGame(userId: Types.ObjectId, deck: ICard[]): Promise<string> {
+  static async createGame(userId: Types.ObjectId, deck: ICard[], attempt: number): Promise<string> {
     await dbConnect();
 
     const game = new GameDB({
@@ -12,6 +12,7 @@ export class GameService {
       deck,
       actions: [],
       status: GameStatus.IN_PROGRESS,
+      attempt,
     });
 
     await game.save();

@@ -1,6 +1,6 @@
 import { model, models, Schema, Types } from "mongoose";
 
-const GameRightForPerNft = 1
+const GameRightForPerNft = 2
 const GameRightForTweet = 1
 
 export interface IUser {
@@ -29,12 +29,13 @@ const userSchema = new Schema<IUser>({
 export const UserDB = models?.User || model<IUser>('User', userSchema);
 
 const RolesAndRights = {
-    "1411285032865107968" : 4, // playboy
-    "1411284997968760832" : 3, // gigachad
-    "1411284952389259404" : 3, // chad
-    "1411284920755552358" : 2, // womanizer
-    "1411284876308647936" : 2, // stoud
-    "1411284842506620970" : 1 // divas
+    "1411285032865107968" : 10, // playboy
+    "1411284997968760832" : 6, // gigachad
+    "1411284952389259404" : 5, // chad
+    "1411284920755552358" : 4, // womanizer
+    "1411284876308647936" : 3, // stoud
+    "1411284842506620970" : 2, // divas
+    "1411284793932386305":  1 // alphas
 }
 
 export const getRights = (roles: string[]) => {

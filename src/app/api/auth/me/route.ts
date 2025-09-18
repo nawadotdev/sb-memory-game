@@ -1,4 +1,5 @@
 import { verifyCookie } from "@/lib/jwt"
+import { getGameRights } from "@/models/User.model"
 import { UserService } from "@/services/User.service"
 import { Types } from "mongoose"
 import { NextRequest, NextResponse } from "next/server"
@@ -18,6 +19,6 @@ export async function GET(request: NextRequest) {
     if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
-    return NextResponse.json({ user, token: userToken.value })
+    return NextResponse.json({ user, token: userToken.value, userRights: getGameRights(user) })
 
 }

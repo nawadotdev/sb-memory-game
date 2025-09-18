@@ -19,20 +19,20 @@ const MyGames = () => {
     }, [])
 
     return (
-        <Card className='px-4'>
-            <CardTitle>
+        <Card className='px-4 '>
+            <CardTitle className='text-center text-2xl'>
                 My Games
             </CardTitle>
-            <Table>
+            <Table className='text-xl'>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>
+                        <TableHead className='text-center'>
                             Score
                         </TableHead>
-                        <TableHead>
+                        <TableHead className='text-center'>
                             Time
                         </TableHead>
-                        <TableHead>
+                        <TableHead className='text-center'>
                             Created At
                         </TableHead>
                     </TableRow>
@@ -42,14 +42,14 @@ const MyGames = () => {
                         <TableRow key={crypto.randomUUID()} onClick={() => {
                             window.open(`/game/${item.gameId}`, "_blank")
                         }} className='cursor-pointer'>
-                            <TableCell>{item.score}</TableCell>
-                            <TableCell>{(item.time?.toFixed(2) || 0)} seconds</TableCell>
-                            <TableCell>{new Date(item.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</TableCell>
+                            <TableCell className='text-center'>{item.score}</TableCell>
+                            <TableCell className='text-center'>{(item.time?.toFixed(2) || 0)}s</TableCell>
+                            <TableCell className='text-center'>{new Date(item.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</TableCell>
                         </TableRow>
                     ))}
                     {list.length === 0 && (
                         <TableRow>
-                            <TableCell colSpan={4} className='text-center'>No data yet</TableCell>
+                            <TableCell colSpan={3} className='text-center'>No data yet</TableCell>
                         </TableRow>
                     )}
                 </TableBody>

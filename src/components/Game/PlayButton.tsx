@@ -11,7 +11,7 @@ const PlayButton = () => {
 
     const [creatingGame, setCreatingGame] = useState(false)
     const router = useRouter()
-    const { user, isAuthenticating } = useAuth()
+    const { user, isAuthenticating, userRights } = useAuth()
 
     const handlePlay = async () => {
         setCreatingGame(true)
@@ -36,7 +36,7 @@ const PlayButton = () => {
     }
 
     return (
-        <Button variant="outline" className='cursor-pointer' onClick={handlePlay} disabled={creatingGame || isAuthenticating || !user}>
+        <Button variant="ghost" size={"lg"} className='cursor-pointer bg-discord-blue text-white' onClick={handlePlay} disabled={creatingGame || isAuthenticating || !user}>
             <PlayIcon className='size-4' />
             {isAuthenticating ? <Loader2 className='animate-spin' /> :
                 !user ? <p className='flex items-center gap-2'>Login to play</p> :

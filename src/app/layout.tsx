@@ -68,7 +68,7 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/game/unfound.png" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-solbabe-purple/60`}
       >
         <AuthProvider>
           <Navbar />
