@@ -2,9 +2,10 @@
 
 import { CardStatus, GameStatus, ISafeGame } from "@/models/Game.model"
 import Card from "./Card"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 const GameComponent = ({
   game,
@@ -20,6 +21,29 @@ const GameComponent = ({
 
   const [timeLeft, setTimeLeft] = useState<number>(20)
   const [isCompleted, setIsCompleted] = useState<boolean>(game.status === GameStatus.COMPLETED)
+  const router = useRouter()
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      setIsCompleted(true)
+    }
+  }, [timeLeft])
+
+  useEffect(() => {
+    if (game.status === GameStatus.COMPLETED) {
+      setIsCompleted(true)
+    }
+  }, [game.status])
+
+  const timerRef = useRef(false)
+  useEffect(() => {
+    if (timerRef.current) return
+    if (isCompleted && router) {
+      timerRef.current = true
+      setTimeout(() => {
+        router.push("/")
+      }, 5000)
+    }
+  }, [isCompleted, router, timerRef])
 
   useEffect(() => {
     if (!game.endTime) {
@@ -63,7 +87,7 @@ const GameComponent = ({
           ))}
         </div>
       </div>
-      {(isCompleted || timeLeft === 0) && (
+      {(isCompleted) && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="relative">
             <Image

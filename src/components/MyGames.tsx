@@ -23,7 +23,7 @@ const MyGames = () => {
             <CardTitle className='text-center text-2xl'>
                 My Games
             </CardTitle>
-            <Table className='text-xl'>
+            <Table className='text-xl overflow-y-auto max-h-[500px]'>
                 <TableHeader>
                     <TableRow>
                         <TableHead className='text-center'>
